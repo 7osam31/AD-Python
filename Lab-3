@@ -1,0 +1,30 @@
+import pandas as pd
+from pandas import isnull
+
+# Sample dataset
+raw = {
+    "product": ["Widget A", "Widget B", "Widget C"],
+    "price": ["$1,234.50", "$567.89", "$2,345.00"],
+    "quantity": [10, 5, None],
+}
+
+df = pd.DataFrame(raw)
+
+
+# TODO: Clean price column using .apply with lambda.
+df["price"] = df["price"].apply(lambda a: a.replace("$","").replace(",","")).astype(float)
+
+# TODO: Fill missing quantity with 0.
+df["quantity"] = df["quantity"].apply(lambda x: 0 if isnull(x) else x )
+
+
+# TODO: Create total column.
+qwe=df.apply(lambda row: row["price"]*row["quantity"], axis=1)
+df["total"] = qwe
+
+# TODO: Add price_category column (low/med/high).
+qp=df["price"].apply(lambda w: "high"if w>2000 else"med" if 2000>w>1000 else "low")
+df["price_category"] = qp
+
+print(df)
+
