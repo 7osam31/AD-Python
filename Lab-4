@@ -1,0 +1,114 @@
+students = {
+    "S001": {
+        "name": "Alice Chen",
+        "courses": {
+            "CS101": {"grade": 92, "credits": 3},
+            "MATH201": {"grade": 88, "credits": 4},
+            "AI301": {"grade": 95, "credits": 3},
+        },
+        "advisor": "Dr. Smith",
+    },
+    "S002": {
+        "name": "Bob Lee",
+        "courses": {
+            "CS101": {"grade": 85, "credits": 3},
+            "MATH201": {"grade": 90, "credits": 4},
+        },
+        "advisor": "Dr. Patel",
+    },
+}
+# TODO: Implement the tasks above using nested dict access
+def GPA (key):
+    global students
+    credits1 = [students.get(key, {}).get("courses", {}).get("CS101", {}).get("credits", 0)]
+    credits2=[students.get(key, {}).get("courses", {}).get("MATH201", {}).get("credits", 0)]
+    credits3=[students.get(key, {}).get("courses", {}).get("AI301", {}).get("credits", 0) if "AI301" in  students.get(key, {}).get("courses") else 0]
+    grades1 = [students.get(key, {}).get("courses", {}).get("CS101", {}).get("grade", 0)]
+    grades2=[students.get(key, {}).get("courses", {}).get("MATH201", {}).get("grade", 0)]
+    grades3=[students.get(key, {}).get("courses", {}).get("AI301", {}).get("grade", 0) if "AI301" in students.get(
+                  key, {}).get("courses") else 0]
+    grcr=[]
+    if grades1[0]>95:
+        pl1=5*credits1[0]
+        grcr.append(pl1)
+    elif 96>grades1[0]>89:
+        pl2=4*credits1[0]
+        grcr.append(pl2)
+    elif 90>grades1[0]>84:
+        pl3=3.5*credits1[0]
+        grcr.append(pl3)
+    elif 81>grades1[0]>69:
+        pl4=3*credits1[0]
+        grcr.append(pl4)
+    else:
+        grcr=grcr
+    if grades2[0]>95:
+        gag1=5*credits2[0]
+        grcr.append(gag1)
+    elif 96>grades2[0]>89:
+        gag2=4*credits2[0]
+        grcr.append(gag2)
+    elif 90>grades2[0]>84:
+        gag3=3.5*credits2[0]
+        grcr.append(gag3)
+    elif 81>grades2[0]>69:
+        gag4=3*credits2[0]
+        grcr.append(gag4)
+    else:
+        grcr=grcr
+    if not grades3[0]==0:
+        if grades3[0] > 95:
+            pl5 = 5 * credits3[0]
+            grcr.append(pl5)
+        elif 96 > grades3[0] > 89:
+            pl6 = 4 * credits3[0]
+            grcr.append(pl6)
+        elif 90 > grades3 [0]> 84:
+            pl7 = 3.5 * credits3[0]
+            grcr.append(pl7)
+        elif 81 > grades3[0] > 69:
+            pl8 = 3 * credits3[0]
+            grcr.append(pl8)
+        else:
+            grcr=grcr
+    else:
+        grcr=grcr
+    grcr=sum(grcr)
+    crsum=sum(credits1+credits2+credits3)
+    return grcr/crsum
+#TODO:----------ALICE's AI GRADE
+alice_grade=students.get("S001",{}).get("courses",{}).get("AI301",{}).get("grade",0)
+print(alice_grade)
+#TODO:----------BoB's GPA
+bob_gpa=GPA("S002")
+print(bob_gpa)
+#TODO:----------STUDENTS IN CS101
+keys=["S001", "S002"]
+Names=[]
+for keys in students:
+    if "CS101" in students[keys].get("courses"):
+        Names.append(students[keys].get("name"))
+print(Names)
+#TODO:----------Get average grade across all courses
+course_=["CS101", "MATH201", "AI301"]
+Aver=[]
+aver=[]
+for keys in students:
+    for ap in course_:
+        if ap in students[keys].get("courses"):
+            aver.append(students[keys].get("courses").get(ap).get("grade"))
+Sumaver=sum(aver)
+print(Sumaver/len(aver))
+#TODO:----------Find student with highest GPA
+ali_gpa=GPA("S001")
+if ali_gpa>bob_gpa:
+    print("Alice's GPA is greater than Bob's GPA")
+elif ali_gpa<bob_gpa:
+    print("BoB's GPA is greater than Alice's GPA")
+else:
+    print("Alice's GPA is equals Bob's GPA")
+
+
+
+
+
