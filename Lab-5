@@ -1,0 +1,19 @@
+import json
+from pathlib import Path
+data={
+    "id":1,
+    "courses":"machine learning",
+    "status": "complete"
+}
+with open ("config.json","w") as f:
+    json.dump(data,f)
+
+# TODO: Load config.json from disk
+with open("config.json","r") as f:
+    data=json.load(f)
+print(data)
+# TODO: Print config values
+print(json.dumps(data,indent=4))
+# TODO: Create results dict and write to results.json
+da=json.loads('{"result":"100"}')
+print(da)
