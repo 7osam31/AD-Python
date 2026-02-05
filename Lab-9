@@ -1,0 +1,39 @@
+
+"""day 9 Activity: Data Types Practice
+Tasks:
+1) Identify numeric-like, currency-like, datetime-like columns
+2) Convert to proper dtypes
+3) Validate conversions by checking NaN counts
+"""
+import pandas as pd
+
+raw = {
+    "age": ["25", "30", "unknown"],
+    "income": ["$50,000", "$60,000", None],
+    "signup": ["2024-01-01", "01/05/2024", "not a date"],
+}
+
+df = pd.DataFrame(raw)
+
+# TODO: Implement normalize_schema(df) to convert types safely
+df["age"] = pd.to_numeric(df["age"], errors="coerce")
+df["age"]=df["age"].replace(["unknown"], pd.NA)
+
+
+def clean_currency(s: pd.Series) -> pd.Series:
+    cleaned = s.str.replace(r"[^0-9.\-]", "", regex=True)  
+    return pd.to_numeric(cleaned, errors="coerce")
+
+df["income"] = clean_currency(df["income"])
+
+
+df["income_str"] = df["income"].astype(str)
+df["income_str"] = df["income_str"].replace(["N/A", "unknown"], pd.NA)
+df["income_num"] = pd.to_numeric(df["income_str"], errors="coerce")
+
+df["signup"] = df["signup"].replace("/", "-", regex=True)  
+print("\nDataFrame before converting 'signup':\n", df)
+df["signup"] = pd.to_datetime(df["signup"], errors="coerce")
+print("\nDataFrame after converting 'signup' to datetime:\n", df)
+
+
