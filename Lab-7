@@ -1,0 +1,55 @@
+"""
+Day 7 Activity: Imputation Practice
+Tasks:
+1) Implement fit_imputer(train_df) returning medians/modes
+2) Implement transform_imputer(df, params)
+3) Add missing indicators optionally
+4) Compare behavior with/without indicators
+"""
+import pandas as pd
+import numpy as np
+
+df=pd.read_csv("C:\\Users\\acer57\\OneDrive\\Desktop\\my web\\python\\day07_test.csv")
+missing=["n/a","na","--","?","unknown","Unknown","NA","N/A"]
+df=df.replace(missing, np.nan)
+if "split"in df.columns:
+    train = df[df["split"]=="train"].copy()
+    test = df[df["split"]=="test"].copy()
+else:
+        cut = int(len(df) * 0.7) 
+        train = df.iloc[:cut].copy() 
+        test = df.iloc[cut:].copy()
+num_cols =train.select_dtypes(include="number").columns.tolist()
+cat_cols = train.select_dtypes(include="object").columns.tolist()
+if "churned" in num_cols:
+    num_cols.remove("churned")
+if "churned" in cat_cols:
+    cat_cols.remove("churned")
+
+def fit_imputer(train, num_cols, cat_cols):
+    return {"num_median": {c: train[c].median() for c in num_cols},
+            "cat_mode": {c: train[c].mode(dropna=True)[0] for c in cat_cols}}
+params = fit_imputer(train, num_cols, cat_cols)
+
+def transform_imputer(df, params, add_indicators=True):
+    df_copy = df.copy()
+    for c, median in params["num_median"].items():
+        if add_indicators:
+            df_copy[c + "_missing"] = df_copy[c].isna().astype(int)
+        df_copy[c] = df_copy[c].fillna(median)
+    for c, mode in params["cat_mode"].items():
+        if add_indicators:
+            df_copy[c + "_missing"] = df_copy[c].isna().astype(int)
+        df_copy[c] = df_copy[c].fillna(mode)
+    return df_copy
+
+
+train_no_indicators = transform_imputer(train, params, add_indicators=False)
+test_no_indicators = transform_imputer(test, params, add_indicators=False)     
+train_ind = transform_imputer(train, params, add_indicators=True)
+test_ind = transform_imputer(test, params, add_indicators=True)
+
+print("Train with indicators:\n", train_ind)
+print("Test with indicators:\n", test_ind)   
+print("Train ", train_no_indicators)
+print("Test ", test_no_indicators)
